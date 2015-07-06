@@ -37,7 +37,7 @@ You can also specify multiple permissions, which will check to see if your resou
 `user.permissions.include?(:read_books, :delete_books)`
 
 #### Add permissions
-You can add permissions to your resource with the familiar "add to array"-syntax. To add permissions to :read_books to your user:  
+You can add permissions to your resource with the familiar "append to"-syntax. To add permissions to :read_books to your user:  
 `user.permissions << :read_books`
 
 You can also add an array of permissions yo your array of permissions:  
