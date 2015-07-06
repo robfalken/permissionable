@@ -13,3 +13,4 @@ tmp/
 *.a
 mkmf.log
 .rspec
+permissionable*.gem
