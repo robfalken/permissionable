@@ -1,6 +1,9 @@
 # permissionable
 ## Installation
-TODO
+
+Permissionable is distributed as a gem. To install it, just drop line in your Gemfile:  
+`gem 'permissionable', '~> 0.1.1'`
+
 
 ## Usage
 ### Hooking up your model with permissionable super powers
