@@ -2,7 +2,7 @@
 ## Installation
 
 Permissionable is distributed as a gem. To install, just add this line to your Gemfile:  
-`gem 'permissionable', '~> 0.1.1'`
+`gem 'permissionable', '~> 0.1.2'`
 
 
 ## Usage
