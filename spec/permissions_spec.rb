@@ -59,18 +59,18 @@ describe Permissionable::Permissions do
     expect(@permissions[:play]).to eq(false)
   end
 
-  it 'writes attribute when adding permission' do
+  it 'updates column when adding permission' do
     @owner = Dummy.new
     @permissions = Permissionable::Permissions.new(@owner)
-    expect(@owner).to receive(:write_attribute).with(:permission, 2)
+    expect(@owner).to receive(:update_column).with(:permission, 2)
     @permissions << :walk
   end
 
-  it 'writes attribute when removing permission' do
+  it 'updates column when removing permission' do
     @owner = Dummy.new
     @permissions = Permissionable::Permissions.new(@owner)
     @permissions << :run
-    expect(@owner).to receive(:write_attribute).with(:permission, 0)
+    expect(@owner).to receive(:update_column).with(:permission, 0)
     @permissions.remove :run
   end
 end
