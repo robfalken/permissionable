@@ -1,6 +1,15 @@
 require 'permissionable'
 require 'dummy'
 
+class DummyWithPermissions
+  include Permissionable
+  permissions walk: 1
+
+  def read_attribute(attribute)
+    1 if attribute == :permissions
+  end
+end
+
 describe Permissionable::Permissions do
   before(:each) { @permissions = Permissionable::Permissions.new(Dummy.new) }
 
@@ -61,7 +70,7 @@ describe Permissionable::Permissions do
   it 'updates column when adding permission' do
     @owner = Dummy.new
     @permissions = Permissionable::Permissions.new(@owner)
-    expect(@owner).to receive(:update_column).with(:permission, 2)
+    expect(@owner).to receive(:update_column).with(:permissions, 2)
     @permissions << :walk
   end
 
@@ -69,7 +78,13 @@ describe Permissionable::Permissions do
     @owner = Dummy.new
     @permissions = Permissionable::Permissions.new(@owner)
     @permissions << :run
-    expect(@owner).to receive(:update_column).with(:permission, 0)
+    expect(@owner).to receive(:update_column).with(:permissions, 0)
     @permissions.remove :run
+  end
+
+  it 'can read permissions from owner' do
+    owner = DummyWithPermissions.new
+    permissions = Permissionable::Permissions.new(owner)
+    expect(permissions[:walk]).to be true
   end
 end

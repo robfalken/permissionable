@@ -6,6 +6,7 @@ class FlakyDummy
   include Permissionable
 end
 
+
 describe Permissionable do
   context 'permission definitions' do
     subject(:permissions) { Dummy.instance_variable_get(:@permissions) }

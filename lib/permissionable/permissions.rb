@@ -69,7 +69,7 @@ module Permissionable
 
     def sync_with_owner
       if @owner.respond_to?(:update_column)
-        @owner.update_column(:permission, @permission_integer)
+        @owner.update_column(:permissions, @permission_integer)
       end
     end
 
