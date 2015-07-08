@@ -24,7 +24,7 @@ class AddPermissionsToResource < ActiveRecord::Migration
 end
 ```
 
-If your're not using AR can also implement your own `#read_attribute` and `#write_attribute` methods to handle `read_attribute(:permissions)` and `write_attribute(:permissions, permissions_integer)`
+If your're not using AR can also implement your own `#read_attribute` and `#update_column` methods to handle `read_attribute(:permissions)` and `update_column(:permissions, permissions_integer)`
 
 ### Working with permissions
 #### Check for permissions

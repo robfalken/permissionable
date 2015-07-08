@@ -68,8 +68,8 @@ module Permissionable
     end
 
     def sync_with_owner
-      if @owner.respond_to?(:write_attribute)
-        @owner.write_attribute(:permission, @permission_integer)
+      if @owner.respond_to?(:update_column)
+        @owner.update_column(:permission, @permission_integer)
       end
     end
 
