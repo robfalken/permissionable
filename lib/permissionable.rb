@@ -1,4 +1,5 @@
 require "permissionable/version"
+require "permissionable/exceptions"
 require "permissionable/permissions"
 
 module Permissionable
@@ -6,14 +7,21 @@ module Permissionable
   def permissions
     @permissions ||= Permissions.new(self)
   end
+  
+  def permissions=(*permissions)
+    permissions.flatten!
+    self.permissions.clear!
+    self.permissions << permissions
+    self.permissions.send(:sync_with_owner)
+  end
 
   # Class methods from here on
   module ClassMethods
+
     def permissions(permission_definitions)
       @permissions = {}
       permission_definitions.each do |permission,i|
-        raise 'Can not assign 0' if i == 0
-        raise "#{i} is not an integer" unless i.is_a?(Fixnum)
+        raise InvalidPermissionAssignment.new(i) if i == 0 || !i.is_a?(Fixnum)
         if i == 1
           @permissions[permission] = 1 
         else

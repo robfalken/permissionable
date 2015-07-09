@@ -4,7 +4,7 @@
 ## Installation
 
 Permissionable is distributed as a gem. To install, just add this line to your Gemfile:  
-`gem 'permissionable', '~> 0.1.2'`
+`gem 'permissionable', '~> 0.1.3'`
 
 
 ## Usage
@@ -17,16 +17,16 @@ permissions read: 1,
             delete: 3
 ```
 
-Your model doesn't have to be an ActiveRecord (AR) model, but Permissionable works out of the box with AR to persist the permissions. Just throw in a `permissions` column in the mix.
+Your model doesn't have to be an ActiveRecord (AR) model, but Permissionable works out of the box with AR to persist the permissions. Just throw in a `permissions_integer` column in the mix.
 ```
 class AddPermissionsToResource < ActiveRecord::Migration
   def change
-    add_column :resources, :permissions, :integer
+    add_column :resources, :permissions_integer, :integer
   end
 end
 ```
 
-If your're not using AR can also implement your own `#read_attribute` and `#update_column` methods to handle `read_attribute(:permissions)` and `update_column(:permissions, permissions_integer)`
+If your're not using AR can also implement your own `#read_attribute` and `#update_column` methods to handle `read_attribute(:permissions_integer)` and `update_column(:permissions_integer, permissions_integer)`
 
 ### Working with permissions
 #### Check for permissions
@@ -54,6 +54,9 @@ You can also add an array of permissions yo your array of permissions:
 #### Remove permissions
 Removing permissions from your resource is pretty straight forward:  
 `user.permissions.remove(:delete_books)`
+
+Or, if you would like to remove all permissions:  
+`user.permissions.clear!`
 
 ### Examples
 ```

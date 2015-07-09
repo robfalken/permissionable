@@ -6,7 +6,7 @@ class DummyWithPermissions
   permissions walk: 1
 
   def read_attribute(attribute)
-    1 if attribute == :permissions
+    1 if attribute == :permissions_integer
   end
 end
 
@@ -53,7 +53,7 @@ describe Permissionable::Permissions do
     expect(@permissions.include?(:run, :walk)).to be true
   end
 
-  it 'it is false when one of asserted is missing' do
+  it 'is false when one of asserted is missing' do
     @permissions << :run
     @permissions << :walk
     expect(@permissions.include?(:run, :play)).to be false
@@ -68,18 +68,27 @@ describe Permissionable::Permissions do
   end
 
   it 'updates column when adding permission' do
-    @owner = Dummy.new
-    @permissions = Permissionable::Permissions.new(@owner)
-    expect(@owner).to receive(:update_column).with(:permissions, 2)
-    @permissions << :walk
+    owner = Dummy.new
+    permissions = Permissionable::Permissions.new(owner)
+    expect(owner).to receive(:update_column).with(:permissions_integer, 2)
+    permissions << :walk
   end
 
   it 'updates column when removing permission' do
-    @owner = Dummy.new
-    @permissions = Permissionable::Permissions.new(@owner)
-    @permissions << :run
-    expect(@owner).to receive(:update_column).with(:permissions, 0)
-    @permissions.remove :run
+    owner = Dummy.new
+    permissions = Permissionable::Permissions.new(owner)
+    permissions << :run
+    expect(owner).to receive(:update_column).with(:permissions_integer, 0)
+    permissions.remove :run
+  end
+
+  it 'can clear permissions' do
+    owner = Dummy.new
+    permissions = Permissionable::Permissions.new(owner)
+    permissions << :run
+    expect(permissions[:run]).to be true
+    permissions.clear!
+    expect(permissions.to_i).to be_zero
   end
 
   it 'can read permissions from owner' do

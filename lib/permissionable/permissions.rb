@@ -3,14 +3,14 @@ module Permissionable
     def initialize(owner)
       @owner = owner
       if @owner.respond_to?(:read_attribute)
-        @permission_integer = @owner.read_attribute(:permissions)
+        @permissions_integer = @owner.read_attribute(:permissions_integer)
       else
-        @permission_integer = 0
+        @permissions_integer = 0
       end
     end
 
     def to_i
-      @permission_integer
+      @permissions_integer
     end
 
     # Add new permissions
@@ -23,7 +23,7 @@ module Permissionable
       control_definitions(permissions)
       permissions.each do |permission|
         new_permission = defined_permissions[permission]
-        @permission_integer += new_permission unless include?(permission)
+        @permissions_integer += new_permission unless include?(permission)
       end
       sync_with_owner
     end
@@ -38,7 +38,7 @@ module Permissionable
       permissions.flatten!
       control_definitions(permissions)
       permissions.each do |permission|
-        @permission_integer -= defined_permissions[permission] if include?(permission)
+        @permissions_integer -= defined_permissions[permission] if include?(permission)
       end
       sync_with_owner
     end
@@ -55,9 +55,14 @@ module Permissionable
       # Sum the corresponding int value of all 
       # permissions provided in the argument list
       asserted = permissions.inject(0){ |mem, permission| mem + defined_permissions[permission] }
-      @permission_integer & asserted == asserted
+      @permissions_integer & asserted == asserted
     end
     alias_method :[], :include?
+
+    def clear!
+      @permissions_integer = 0
+      sync_with_owner
+    end
 
     private 
 
@@ -68,8 +73,13 @@ module Permissionable
     end
 
     def sync_with_owner
+      if @owner.respond_to?(:permissions_integer=)
+        @owner.permissions_integer = @permissions_integer
+      end
       if @owner.respond_to?(:update_column)
-        @owner.update_column(:permissions, @permission_integer)
+        if @owner.respond_to?(:persisted?) && @owner.persisted?
+          @owner.update_column(:permissions_integer, @permissions_integer)
+        end
       end
     end
 

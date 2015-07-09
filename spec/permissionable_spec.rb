@@ -2,6 +2,8 @@ require 'permissionable'
 require 'dummy'
 
 
+# This class is a bit unreliable because 
+# it has its permissions redefined in the tests
 class FlakyDummy
   include Permissionable
 end
@@ -31,13 +33,13 @@ describe Permissionable do
       it 'can not assign 0' do
         expect{
           FlakyDummy.permissions(nope: 0)
-        }.to raise_exception
+        }.to raise_exception(Permissionable::InvalidPermissionAssignment)
       end
 
-      it 'can only assign integers' do
+      it 'can not assign strings' do
         expect{
           FlakyDummy.permissions(nope: '1')
-        }.to raise_exception
+        }.to raise_exception(Permissionable::InvalidPermissionAssignment)
       end
     end
   end
@@ -49,6 +51,10 @@ describe Permissionable do
       expect(dummy.permissions).to be_an_instance_of(Permissionable::Permissions)
     end
 
+    it 'can assign permissions on initializing' do
+      dummy = Dummy.new(permissions: [:sit, :eat])
+      expect(dummy.permissions[:sit, :eat]).to be true
+    end
   end
 
 end
